@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Big Mart AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <i class="fas fa-chart-line"></i> Big Mart AI
+        </a>
+        <div class="nav-links">
+            <a href="/" class="btn" style="color: var(--text-muted);">Home</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="prediction-container feedback-container">
+            <div class="text-center mb-4">
+                <i class="fas fa-paper-plane fa-3x" style="color: var(--primary-color);"></i>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 0.5rem;">We Value Your Feedback</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Let us know how we can improve
+                your experience.</p>
+
+            <form method="POST" action="/feedback">
+                <div class="form-group">
+                    <label class="form-label">Your Message</label>
+                    <textarea name="message" class="form-control" rows="6" placeholder="Tell us what you think..."
+                        required></textarea>
+                </div>
+
+                <div class="submit-btn">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-envelope"></i> Send Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Big Mart AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #1cc88a;
+            --bg-color: #f3f4fd;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">Big Mart AI</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a href="/" class="btn-back">← Back to Home</a>
+        <h1>Analytics Dashboard</h1>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Average Sales by Item Type</h3>
+                <div class="chart-container">
+                    <canvas id="itemTypeChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Average Sales by Outlet Type</h3>
+                <div class="chart-container">
+                    <canvas id="outletTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Price vs Predicted Sales</h3>
+                <div class="chart-container">
+                    <canvas id="scatterChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data from Flask
+        const itemTypeLabels = {{ item_type_labels | tojson }};
+        const itemTypeData = {{ item_type_sales | tojson }};
+        const outletLabels = {{ outlet_labels | tojson }};
+        const outletValues = {{ outlet_values | tojson }};
+        const scatterData = {{ scatter_data | tojson }};
+
+        // 1. Item Type Chart (Bar)
+        new Chart(document.getElementById('itemTypeChart'), {
+            type: 'bar',
+            data: {
+                labels: itemTypeLabels,
+                datasets: [{
+                    label: 'Avg Predicted Sales ($)',
+                    data: itemTypeData,
+                    backgroundColor: 'rgba(78, 115, 223, 0.7)',
+                    borderColor: '#4e73df',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // 2. Outlet Type Chart (Doughnut)
+        new Chart(document.getElementById('outletTypeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: outletLabels,
+                datasets: [{
+                    data: outletValues,
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // 3. Scatter Chart (MRP vs Prediction)
+        new Chart(document.getElementById('scatterChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'MRP vs Prediction',
+                    data: scatterData,
+                    backgroundColor: '#e74a3b'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: { display: true, text: 'Item MRP' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Predicted Sales' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

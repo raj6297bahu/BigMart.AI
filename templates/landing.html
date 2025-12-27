@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Mart Sales AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <i class="fas fa-chart-line"></i> Big Mart AI
+        </a>
+        <div class="nav-links">
+            {% if current_user.is_authenticated %}
+            <span class="btn" style="color: var(--text-main); cursor: default;">Hello, {{ current_user.username
+                }}</span>
+            <a href="{{ url_for('feedback') }}" class="btn" style="color: var(--accent-color);">Feedback</a>
+            <a href="{{ url_for('dashboard') }}" class="btn" style="color: var(--primary-color);">Dashboard</a>
+            <a href="{{ url_for('predict_ui') }}" class="btn btn-primary">Predict</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn" style="color: var(--primary-color);">Login</a>
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Predict Sales with Precision</h1>
+            <p>Leverage the power of advanced Machine Learning algorithms to forecast outlet sales accurately. Optimize
+                inventory, maximize revenue, and make data-driven decisions.</p>
+            <a href="{{ url_for('predict_ui') }}" class="btn btn-primary"
+                style="font-size: 1.25rem; padding: 1rem 2.5rem;">Try It Now <i class="fas fa-arrow-right"></i></a>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3>Advanced ML Model</h3>
+                <p>Powered by Random Forest Regression for high accuracy predictions based on historical data.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Instant Results</h3>
+                <p>Get real-time sales forecasts by simply entering product and store details.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-history"></i></div>
+                <h3>History Tracking</h3>
+                <p>Keep track of all your predictions with our integrated database system.</p>
+            </div>
+        </section>
+
+        <h2 style="text-align: center; margin-bottom: 2rem;">Recent Predictions</h2>
+        {% if recent_predictions %}
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Type</th>
+                        <th>Outlet Type</th>
+                        <th>MRP</th>
+                        <th>Predicted Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pred in recent_predictions %}
+                    <tr>
+                        <td>{{ pred.item_type }}</td>
+                        <td>{{ pred.outlet_type }}</td>
+                        <td>Rs. {{ pred.item_mrp }}</td>
+                        <td style="font-weight: bold; color: var(--secondary-color);">Rs. {{ pred.prediction }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="text-align: center; color: var(--text-muted);">No predictions yet. Be the first!</p>
+        {% endif %}
+
+        <footer>
+            <p>© 2025 Big Mart Sales AI. Designed for Excellence.</p>
+        </footer>
+    </div>
+</body>
+
+</html>
